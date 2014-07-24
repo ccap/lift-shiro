@@ -7,7 +7,7 @@ object BuildSettings {
   val buildVersion      = "0.0.8-ccap"
   val buildScalaVersion = "2.10.4"
 
-  val buildSettings = Defaults.defaultSettings ++ Seq (
+  val buildSettings = Seq(
     liftVersion <<= liftVersion ?? "3.0-M1",
     liftEdition <<= liftVersion apply { _.substring(0,3) },
     name <<= (name, liftEdition) { (n, e) =>  n + "_" + e },
