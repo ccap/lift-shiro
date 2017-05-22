@@ -4,11 +4,11 @@ import LiftModuleBuild._
 
 object BuildSettings {
   val buildOrganization = "eu.getintheloop"
-  val buildVersion      = "0.0.8-ccap"
-  val buildScalaVersion = "2.10.4"
+  val buildVersion      = "0.0.9-ccap"
+  val buildScalaVersion = "2.12.2"
 
   val buildSettings = Seq(
-    liftVersion <<= liftVersion ?? "3.0-M1",
+    liftVersion <<= liftVersion ?? "3.0.1",
     liftEdition <<= liftVersion apply { _.substring(0,3) },
     name <<= (name, liftEdition) { (n, e) =>  n + "_" + e },
     organization := buildOrganization,
@@ -17,7 +17,7 @@ object BuildSettings {
     scalacOptions <<= scalaVersion map { v: String =>
       val opts = "-deprecation" :: "-unchecked" :: Nil
       if (v.startsWith("2.9.")) opts else opts ++ ( "-language:implicitConversions" :: "-language:postfixOps" :: Nil)},
-    crossScalaVersions := Seq("2.9.1", "2.9.2", "2.10.4"),
+    crossScalaVersions := Seq("2.12.2"),
     resolvers ++= Seq(
       "CB Central Mirror" at "http://repo.cloudbees.com/content/groups/public",
       "Shiro Releases" at "https://repository.apache.org/content/repositories/releases/",
@@ -25,16 +25,14 @@ object BuildSettings {
       "sonatype.repo" at "https://oss.sonatype.org/content/repositories/public/"
     ),
     publishTo <<= version { (v: String) => 
-      val nexus = "https://oss.sonatype.org/" 
-        if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots") 
-        else Some("releases" at nexus + "service/local/staging/deploy/maven2") 
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("CCAP Snapshots" at "http://repoman.wicourts.gov/artifactory/libs-snapshot-local")
+      else
+        Some("CCAP Releases" at "http://repoman.wicourts.gov/artifactory/libs-release-local")
     },
     credentials ++= Seq(
-      Credentials(Path.userHome / ".ivy2" / ".credentials"),
-      Credentials( file("sonatype.credentials") ),
-      Credentials( file("/private/liftmodules/sonatype.credentials") )
+      Credentials(Path.userHome / ".ivy2" / ".credentials")
     ),
-    publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := { repo => false },
     pomExtra := (
@@ -67,7 +65,7 @@ object BuildSettings {
 
 object LiftShiroBuild extends Build {
 
-  liftVersion ?? "3.0-M1"
+  liftVersion ?? "3.0.1"
 
   lazy val root = Project("lift-shiro-root", file("."),
     settings = BuildSettings.buildSettings ++ Seq(
