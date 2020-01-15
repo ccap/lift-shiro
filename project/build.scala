@@ -4,7 +4,7 @@ import LiftModuleBuild._
 
 object BuildSettings {
   val buildOrganization = "eu.getintheloop"
-  val buildVersion      = "0.0.9-ccap"
+  val buildVersion      = "0.0.9-ccap2"
   val buildScalaVersion = "2.12.2"
 
   val buildSettings = Seq(
@@ -80,9 +80,8 @@ object LiftShiroBuild extends Build {
   lazy val library: Project = Project("lift-shiro", file("library"), 
     settings = BuildSettings.buildSettings ++ (
       libraryDependencies ++= Seq(
-        "org.apache.shiro" % "shiro-core" % "1.2.0",
-        "org.apache.shiro" % "shiro-web" % "1.2.0",
-        "commons-beanutils" % "commons-beanutils" % "20030211.134440"
+        "org.apache.shiro" % "shiro-core" % "1.4.2",
+        "org.apache.shiro" % "shiro-web" % "1.4.2"
       )
     ) ++ Seq(
       libraryDependencies <+= liftVersion("net.liftweb" %% "lift-webkit" % _ % "provided")
